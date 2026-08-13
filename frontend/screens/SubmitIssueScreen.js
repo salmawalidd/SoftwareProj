@@ -134,7 +134,7 @@ export default function SubmitIssueScreen({ navigation }) {
       }, Room ${room || "-"}`;
 
       const response = await fetch(
-        "http://192.168.1.25:8000/api/issues",
+        "http://192.168.1.20:8000/api/issues",
         {
           method: "POST",
           headers: {
@@ -181,113 +181,150 @@ export default function SubmitIssueScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Submit Issue</Text>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.backText}>‹</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.label}>Category</Text>
+        <Text style={styles.headerTag}>COMMUNITY MEMBER</Text>
 
-      <View style={styles.categoryContainer}>
-        {categories.map((item) => (
-          <TouchableOpacity
-            key={item}
-            style={[
-              styles.categoryButton,
-              category === item &&
-                styles.selectedCategoryButton,
-            ]}
-            onPress={() => setCategory(item)}
-          >
-            <Text
+        <Text style={styles.headerTitle}>Submit Issue</Text>
+
+        <Text style={styles.headerSubtitle}>
+          Report maintenance problems with accurate details and photo evidence.
+        </Text>
+      </View>
+
+      <View style={styles.formCard}>
+        <Text style={styles.sectionTitle}>Issue Information</Text>
+
+        <Text style={styles.label}>Category</Text>
+
+        <View style={styles.categoryContainer}>
+          {categories.map((item) => (
+            <TouchableOpacity
+              key={item}
+              activeOpacity={0.85}
               style={[
-                styles.categoryText,
-                category === item &&
-                  styles.selectedCategoryText,
+                styles.categoryButton,
+                category === item && styles.selectedCategoryButton,
               ]}
+              onPress={() => setCategory(item)}
             >
-              {item}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+              <Text
+                style={[
+                  styles.categoryText,
+                  category === item && styles.selectedCategoryText,
+                ]}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <Text style={styles.label}>Description</Text>
+        <Text style={styles.label}>Description</Text>
 
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="Describe the issue"
-        placeholderTextColor="#888"
-        value={description}
-        onChangeText={setDescription}
-        maxLength={300}
-        multiline
-      />
-
-      <Text style={styles.characterCount}>
-        {description.length} / 300 characters
-      </Text>
-
-      <Text style={styles.label}>Building</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Enter building"
-        placeholderTextColor="#888"
-        value={building}
-        onChangeText={setBuilding}
-      />
-
-      <Text style={styles.label}>Floor</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Enter floor"
-        placeholderTextColor="#888"
-        value={floor}
-        onChangeText={setFloor}
-      />
-
-      <Text style={styles.label}>Room</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Enter room"
-        placeholderTextColor="#888"
-        value={room}
-        onChangeText={setRoom}
-      />
-
-      <Text style={styles.label}>Issue Photo</Text>
-
-      <TouchableOpacity
-        style={styles.uploadButton}
-        onPress={pickImage}
-      >
-        <Text style={styles.uploadButtonText}>
-          {photo ? "Change Photo" : "Upload Photo"}
-        </Text>
-      </TouchableOpacity>
-
-      {photo && (
-        <Image
-          source={{ uri: photo }}
-          style={styles.previewImage}
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Describe the issue in detail..."
+          placeholderTextColor="#98A2B3"
+          value={description}
+          onChangeText={setDescription}
+          maxLength={300}
+          multiline
         />
-      )}
 
-      <View style={styles.dateBox}>
-        <Text style={styles.dateText}>
-          Submitted on: {today}
+        <Text style={styles.characterCount}>
+          {description.length} / 300 characters
         </Text>
+
+        <Text style={styles.sectionTitle}>Location Details</Text>
+
+        <Text style={styles.label}>Building</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="e.g. Building A"
+          placeholderTextColor="#98A2B3"
+          value={building}
+          onChangeText={setBuilding}
+        />
+
+        <View style={styles.row}>
+          <View style={styles.halfInput}>
+            <Text style={styles.label}>Floor</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="e.g. 2"
+              placeholderTextColor="#98A2B3"
+              value={floor}
+              onChangeText={setFloor}
+            />
+          </View>
+
+          <View style={styles.halfInput}>
+            <Text style={styles.label}>Room</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="e.g. 101"
+              placeholderTextColor="#98A2B3"
+              value={room}
+              onChangeText={setRoom}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.sectionTitle}>Photo Evidence</Text>
+
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.uploadBox}
+          onPress={pickImage}
+        >
+          <Text style={styles.uploadIcon}>📷</Text>
+
+          <Text style={styles.uploadTitle}>
+            {photo ? "Change Issue Photo" : "Upload Issue Photo"}
+          </Text>
+
+          <Text style={styles.uploadSubtitle}>
+            JPG or PNG photo showing the issue
+          </Text>
+        </TouchableOpacity>
+
+        {photo && (
+          <View style={styles.previewCard}>
+            <Image source={{ uri: photo }} style={styles.previewImage} />
+
+            <View style={styles.photoBadge}>
+              <Text style={styles.photoBadgeText}>Photo selected</Text>
+            </View>
+          </View>
+        )}
+
+        <View style={styles.dateBox}>
+          <Text style={styles.dateText}>Submitted on: {today}</Text>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.button}
+          onPress={handleSubmit}
+        >
+          <Text style={styles.buttonText}>Submit Issue</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit}
-      >
-        <Text style={styles.buttonText}>
-          Submit Issue
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -295,24 +332,82 @@ export default function SubmitIssueScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 25,
-    justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#F6F8F7",
+    paddingBottom: 28,
   },
 
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 25,
-    textAlign: "center",
-    color: "#0B6E4F",
+  header: {
+    backgroundColor: "#0B6E4F",
+    paddingTop: 62,
+    paddingHorizontal: 24,
+    paddingBottom: 34,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+  },
+
+  backButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: "rgba(255,255,255,0.16)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 18,
+  },
+
+  backText: {
+    color: "#fff",
+    fontSize: 38,
+    lineHeight: 40,
+    fontWeight: "300",
+  },
+
+  headerTag: {
+    color: "#BFE3D3",
+    fontSize: 13,
+    fontWeight: "800",
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+
+  headerTitle: {
+    color: "#fff",
+    fontSize: 34,
+    fontWeight: "900",
+    marginBottom: 8,
+  },
+
+  headerSubtitle: {
+    color: "#E3F3EC",
+    fontSize: 15,
+    lineHeight: 22,
+  },
+
+  formCard: {
+    backgroundColor: "#fff",
+    marginHorizontal: 18,
+    marginTop: -18,
+    padding: 20,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    elevation: 3,
+  },
+
+  sectionTitle: {
+    fontSize: 19,
+    fontWeight: "900",
+    color: "#111827",
+    marginTop: 8,
+    marginBottom: 14,
   },
 
   label: {
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 6,
-    color: "#333",
+    fontSize: 13,
+    fontWeight: "800",
+    marginBottom: 7,
+    color: "#475467",
+    letterSpacing: 0.4,
   },
 
   categoryContainer: {
@@ -323,13 +418,13 @@ const styles = StyleSheet.create({
 
   categoryButton: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#D0D5DD",
     paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 20,
+    paddingHorizontal: 14,
+    borderRadius: 24,
     marginRight: 8,
     marginBottom: 10,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F9FAFB",
   },
 
   selectedCategoryButton: {
@@ -338,84 +433,133 @@ const styles = StyleSheet.create({
   },
 
   categoryText: {
-    color: "#333",
-    fontWeight: "600",
+    color: "#475467",
+    fontWeight: "800",
+    fontSize: 13,
   },
 
   selectedCategoryText: {
-    color: "white",
+    color: "#fff",
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 18,
-    fontSize: 16,
-    backgroundColor: "#F5F5F5",
+    borderColor: "#D0D5DD",
+    padding: 14,
+    borderRadius: 14,
+    marginBottom: 16,
+    fontSize: 15,
+    backgroundColor: "#F9FAFB",
+    color: "#111827",
   },
 
   textArea: {
-    height: 90,
+    height: 120,
     textAlignVertical: "top",
     marginBottom: 6,
   },
 
   characterCount: {
     textAlign: "right",
-    color: "#666",
+    color: "#667085",
     fontSize: 12,
     marginBottom: 18,
+    fontWeight: "600",
   },
 
-  uploadButton: {
-    borderWidth: 1,
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  halfInput: {
+    width: "48%",
+  },
+
+  uploadBox: {
+    borderWidth: 1.5,
     borderColor: "#0B6E4F",
-    padding: 14,
-    borderRadius: 8,
-    marginBottom: 15,
-    backgroundColor: "#F5F5F5",
+    borderStyle: "dashed",
+    borderRadius: 18,
+    paddingVertical: 22,
+    paddingHorizontal: 14,
+    alignItems: "center",
+    backgroundColor: "#ECFDF3",
+    marginBottom: 16,
   },
 
-  uploadButtonText: {
+  uploadIcon: {
+    fontSize: 28,
+    marginBottom: 8,
+  },
+
+  uploadTitle: {
     color: "#0B6E4F",
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: "900",
+    fontSize: 16,
+    marginBottom: 4,
+  },
+
+  uploadSubtitle: {
+    color: "#667085",
+    fontSize: 12,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+
+  previewCard: {
+    marginBottom: 18,
   },
 
   previewImage: {
     width: "100%",
-    height: 180,
-    borderRadius: 8,
-    marginBottom: 18,
+    height: 190,
+    borderRadius: 18,
+    backgroundColor: "#E5E7EB",
+  },
+
+  photoBadge: {
+    alignSelf: "flex-start",
+    backgroundColor: "#D1FAE5",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    marginTop: 10,
+  },
+
+  photoBadgeText: {
+    color: "#0B6E4F",
+    fontWeight: "900",
+    fontSize: 12,
   },
 
   dateBox: {
-    backgroundColor: "#EAF4EF",
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: "#F2F4F7",
+    padding: 13,
+    borderRadius: 14,
     marginBottom: 18,
   },
 
   dateText: {
-    color: "#0B6E4F",
-    fontWeight: "600",
+    color: "#475467",
+    fontWeight: "800",
     textAlign: "center",
   },
 
   button: {
     backgroundColor: "#0B6E4F",
-    padding: 15,
-    borderRadius: 8,
-    marginTop: 10,
-    marginBottom: 25,
+    paddingVertical: 16,
+    borderRadius: 16,
+    marginTop: 4,
+    marginBottom: 6,
+    elevation: 3,
   },
 
   buttonText: {
-    color: "white",
+    color: "#fff",
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: "900",
     fontSize: 16,
   },
 });
